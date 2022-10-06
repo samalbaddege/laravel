@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Calcontroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 
@@ -37,6 +38,8 @@ Route::get('/sub/{num1?}/{num2?}', function($num1 = '6', $num2 = '5'){
 
 Route::get('/add/{num1?}/{num2?}', [Controller::class, 'cal']);
 
-Route::get('/calculator',function(){
-    return view('cal');
-});
+//we call this in the browser
+Route::get('/calculator',[Calcontroller::class,'viewcal']); 
+
+//this is called by the function when we click the add button
+Route::post('/Calculate',[Calcontroller::class,'cal']); 
