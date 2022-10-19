@@ -3,6 +3,7 @@
 use App\Http\Controllers\Calcontroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Convertcontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +44,9 @@ Route::get('/calculator',[Calcontroller::class,'viewcal']);
 
 //this is called by the function when we click the add button
 Route::post('/Calculate',[Calcontroller::class,'cal']); 
+
+//to show the converter in the browser
+Route::get('/converter',[Convertcontroller::class,'viewconv']); 
+
+//this is called by the function when we click the convert button
+Route::post('/Convert',[Convertcontroller::class,'convert']); 
