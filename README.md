@@ -53,7 +53,7 @@ Route::get('/sub/{num1?}/{num2?}', function($num1 = '6', $num2 = '5'){
 });
 ```
 
-## Writing Functions in [[#Controller]]
+## Writing Functions in Controller
 - app→Http→Controllers→Controller.php _file_
 - The functions(eg: cal) we write should be inside the Controller Class
 ```php
@@ -261,7 +261,8 @@ return redirect("/converter/$lenInMtrs/$ans/$volInLtrs/$volAns");
 - Open Xampp
 - Goto _phpmyadmin_
 - Create a new database called 'animaldb'
-![pic](attachments/Pasted image 20221020112242.png)
+
+![Pasted image 20221020112242](https://user-images.githubusercontent.com/111477436/196962301-ecdecd43-5df1-4713-9a90-68873814f2d5.png)
 ## Create tables
 ### animal _Table_
 #### Fields
@@ -326,9 +327,11 @@ INSERT INTO `no_legs` (`name`) VALUES ('One'), ('Two'), ('Three'), ('Four');
 ## Add Relationships
 - Go to _animal_ table and go to _Structure_ Tab
 - Click more on *type_id, color_id, legs_id* fields and click on _index_, this must be done for all three fields.
-![[Pasted image 20221020115237.png]]
+
+![Pasted image 20221020115237](https://user-images.githubusercontent.com/111477436/196962662-1e85435e-ac14-463e-b8a0-a51f48f64f78.png)
 - Go to _Relation_ View and create the foreign key relations as follows,
-![[Pasted image 20221020115747.png]]
+
+![Pasted image 20221020115747](https://user-images.githubusercontent.com/111477436/196963035-0512b1cf-ba25-4ce5-93e1-46cc460e0a9a.png)
 - SQL script
 ```sql
 ALTER TABLE `animal` ADD CONSTRAINT `animal_tbl_fk1` FOREIGN KEY (`color_id`) REFERENCES `animal_color`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; 
@@ -336,7 +339,8 @@ ALTER TABLE `animal` ADD CONSTRAINT `animal_tbl_fk2` FOREIGN KEY (`legs_id`) REF
 ALTER TABLE `animal` ADD CONSTRAINT `animal_tbl_fk3` FOREIGN KEY (`type_id`) REFERENCES `animal_type`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ```
 - If you create the relations correctly the insert should show the fields in a dropdown for all three fields *type_id, color_id, legs_id*
-![[Pasted image 20221020120148.png]]
+
+![Pasted image 20221020120148](https://user-images.githubusercontent.com/111477436/196963158-de85ca9d-2cf9-486d-b6e2-15e2e085106f.png)
 
 ## Adding Data to animals Table
 ```sql
@@ -354,7 +358,8 @@ INSERT INTO `animal` (`id`, `name`, `type_id`, `color_id`, `legs_id`) VALUES (NU
 ```powershell
 composer create-project laravel/laravel dbProject
 ```
-![[Pasted image 20221020123153.png]]
+
+![Pasted image 20221020123153](https://user-images.githubusercontent.com/111477436/196963280-bfdf2a22-583e-4506-aa20-38c10debd9d7.png)
 - After project creation completes open the project folder _dbProject_ in VSCode
 - There's a ".env" file in the project root, open it.
 - From line 14 onwards fill the database details as necessary and save.
@@ -596,7 +601,8 @@ Route::get('/', function () {
 Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
 ```
 - Now if you go to the `http://127.0.0.1:8000/animalpage` it should show the records of the _animals_ table.
-![[Pasted image 20221020151852.png]]
+
+![Pasted image 20221020151852](https://user-images.githubusercontent.com/111477436/196963528-0ede2550-50bf-4d18-bd50-9d6898c06a23.png)
 - Now create the following sentence using all the relationships we created in _Animal_ Model.
 "The _AnimalType_ _AnimalName_ which is _AnimalColor_ has _AnimalLegs_ legs."
 ```html
@@ -630,5 +636,6 @@ Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
 </html>
 ```
 - Output:
-![[Pasted image 20221020155342.png]]
+
+![Pasted image 20221020155342](https://user-images.githubusercontent.com/111477436/196963627-1724360b-03ba-46e6-a755-216d4ea2d160.png)
 - The above is only possible because we created the relationships in the _Animal_ model.
