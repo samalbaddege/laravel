@@ -152,10 +152,11 @@ Route::get('/calculator',[Calcontroller::class,'viewcal']);
 //this is called by the function when we click the add button
 Route::post('/Calculate',[Calcontroller::class,'cal']); 
 ```
- > [!INFO] Pure PHP vs Laravel variable use in HTML forms 
+ > Pure PHP vs Laravel variable use in HTML forms 
  > ```php
-value = "<?php echo "$variable"; ?>" //Pure PHP
-value = {{ $variable }} //Laravel 
+ > value = "<?php echo "$variable"; ?>" //Pure PHP
+ > value = {{ $variable }} //Laravel
+ > ``` 
 - To implement the substraction, multiplication, division and other functions we change only the value of the buttons while using the same button name for all the functions. Change the _call.blade.php_ and _cal_ method of _Calcontroller_ as follows.
 ```php
   /*call.blade.php*/
