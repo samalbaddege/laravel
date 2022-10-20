@@ -46,7 +46,10 @@ Route::get('/calculator',[Calcontroller::class,'viewcal']);
 Route::post('/Calculate',[Calcontroller::class,'cal']); 
 
 //to show the converter in the browser
-Route::get('/converter',[Convertcontroller::class,'viewconv']); 
+//Route::get('/converter',[Convertcontroller::class,'viewconv']); 
 
 //this is called by the function when we click the convert button
 Route::post('/Convert',[Convertcontroller::class,'convert']); 
+
+//version 2 of to show the converter in the browser
+Route::get('/converter/{lenMtr?}/{answ?}/{volLtr?}/{volAnsw?}',[Convertcontroller::class,'viewconv']);

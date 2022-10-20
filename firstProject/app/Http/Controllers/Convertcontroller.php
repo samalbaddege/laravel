@@ -12,12 +12,12 @@ class Convertcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function viewconv(){
-        $lenInMtr = 0;
-        $ans = 0;
-
-        $volInLtr = 0;
-        $volAnsw = 0;
+    public function viewconv( $lenInMtr = 0, $ans = 0,$volInLtr = 0,$volAnsw = 0){
+        // $lenInMtr = 0;
+        // $ans = 0;
+        // $volInLtr = 0;
+        // $volAnsw = 0;
+        
         //we set values to HTML value
         return view('converter') -> with('lenMtr',$lenInMtr) -> with('answ',$ans) -> with('volLtr', $volInLtr) -> with('volAnsw',$volAnsw);
 
@@ -67,8 +67,11 @@ class Convertcontroller extends BaseController
         }
 
 
-        return view ('converter') -> with ('lenMtr',$lenInMtrs) -> with ('answ', $ans) -> with('volLtr',$volInLtrs) -> with('volAnsw',$volAns);
+        //version 1 of returning the view
+        //return view ('converter') -> with ('lenMtr',$lenInMtrs) -> with ('answ', $ans) -> with('volLtr',$volInLtrs) -> with('volAnsw',$volAns);
 
+        //version 2 of returning the view
+        return redirect("/converter/$lenInMtrs/$ans/$volInLtrs/$volAns");
     }
 
 }
