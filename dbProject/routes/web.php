@@ -19,3 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
+
+Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
+
+Route::post('/saveanimal',[AnimalController::class,'saveAnimal']);

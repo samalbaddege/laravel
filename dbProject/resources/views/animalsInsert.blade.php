@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Add Animal</title>
 
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,24 +16,7 @@
         </style>
     </head>
     <body class="antialiased">
-        @foreach($animals AS $animal)
-        {{ $animal->name }}<br>
-        @endforeach
-
-        <br>
-        <br>
-        <br>
-        @foreach($animals AS $animal)
-        The {{ $animal->animalType->name }} 
-        {{$animal->name}} which is 
-        {{$animal->animalColor->name}} has 
-        {{$animal->animalLegs->name}} legs. <br><br>
-        @endforeach
-
-
-
-
-        <form name="new_animal_form" method="post" action="/saveanimal">
+    <form name="new_animal_form" method="post" action="/saveanimal">
         {{ csrf_field() }}
             <table border="1" align="center">
             <caption>Add New Animal</caption>
@@ -86,6 +69,5 @@
             </table>
 
        </form>
-
     </body>
 </html>
