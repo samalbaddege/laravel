@@ -640,3 +640,677 @@ Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
 
 ![Pasted image 20221020155342](https://user-images.githubusercontent.com/111477436/196963627-1724360b-03ba-46e6-a755-216d4ea2d160.png)
 - The above is only possible because we created the relationships in the _Animal_ model.
+
+# Day 3
+---
+- We are going to continue with animalsdb for ease of following along.
+
+# Insert
+
+- create a new view in _resources → views_ as animalsInsert.blade.php
+- Add a new form as,
+```html
+<form name="new_animal_form" method="post" action="/saveanimal">
+{{ csrf_field() }}
+</form>        
+```
+- create a table with four rows and three columns inside the form.
+```html
+<table border="1" align="center">
+	<caption>Add New Animal</caption>
+	<tbody>
+	  <tr>
+	    <td>Name</td>
+	    <td>:</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <td>Type</td>
+	    <td>:</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <td>Color</td>
+	    <td>:</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <td># of Legs</td>
+	    <td>:</td>
+	    <td></td>
+	  </tr>
+	</tbody>
+</table>
+```
+
+- To set the border of the table we just added, remove the following section from the `<head></head>` section of the file. Otherwise setting the border of the table won't work.
+```html
+<!-- Styles --> 
+<style>
+...
+</style>
+```
+- Add a text box for the `Name` element.
+```html
+<td><input type="text" id= "animalName" name="animalName" placeholder="Enter Animal Name"></td>
+```
+- Add a select element for `Type`,`Color`,`# of Legs` `<td></td>` elements.
+```html
+<td><select name="selectType" id="selectType"></select></td>
+<td><select name="selectColor" id="selectColor"></select></td>
+<td><select name="selectLegs" id="selectLegs"></select></td>
+```
+- Add a new row to the table after the last row `# of Legs`to show the _Reset_ and _Submit_ buttons.
+```html
+<tr>
+	<th scope="row" colspan="3">
+		<input value="Reset" type="reset">&nbsp;
+		<input value="Save" type="submit">
+	</th>
+</tr>
+```
+- Your final _animalsInsert.blade.php_ file should look like this,
+```html
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Laravel</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="antialiased">
+    <form name="new_animal_form" method="post" action="/saveanimal">
+            
+            {{ csrf_field() }}
+                        
+            <table border="1" align="center">
+            <caption>Add New Animal</caption>
+            <tbody>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td><input type="text" id= "animalName" name="animalName" placeholder="Enter Animal Name"></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>:</td>
+                <td><select name="selectType" id="selectType"></select></td>
+            </tr>
+            <tr>
+                <td>Color</td>
+                <td>:</td>
+                <td><select name="selectColor" id="selectColor"></select></td>
+            </tr>
+            <tr>
+                <td># of Legs</td>
+                <td>:</td>
+                <td><select name="selectLegs" id="selectLegs"></select></td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="3">
+                    <input value="Reset" type="reset">&nbsp;
+                    <input value="Save" type="submit">
+                </th>
+            </tr>
+            </tbody>
+            </table>
+       </form>
+    </body>
+</html>
+```
+- Goto _AnimalController.php_ in _Http→Controllers_ and add a new method `insertAnimal()`as follows to add animal type data that needs to be shown in the dropdown of the insert form.
+```php
+use App\Models\Animal_type;
+
+public function insertAnimal()
+{
+	$animalTypes=Animal_type::all();
+
+return view ('animalsInsert')-> with('animalTypes', $animalTypes);
+}
+```
+- Modify the _animalsInsert.blade.php_'s `Type` row's value `<td></td>` to view the animal type data we passed to view in the controller.
+```html
+<td>
+	<select name="selectType" id="selectType">
+		@foreach($animalTypes as $animalType)
+			<option value="{{$animalType->id}}">
+				{{$animalType->name}}
+			</option>
+		@endforeach
+	</select>
+</td>
+```
+- Now we need to do the above two steps for all the other _select_ values (dropdowns) Animal Color and Animal No of Legs.
+- _AnimalController.php_ add the following code to `insertAnimal()` method.
+```php
+use App\Models\Animal_color;
+
+public function insertAnimal()
+    {
+        $animalColors=Animal_color::all();
+
+        return view ('animalsInsert')-> with('animalTypes', $animalTypes)->with('animalColors',$animalColors);
+    }
+```
+
+```php
+use App\Models\No_legs;
+
+public function insertAnimal()
+{
+	$animalNoOfLegs=No_legs::all();
+
+	return view ('animalsInsert')-> with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+}
+```
+
+- To _animalsInsert.blade.php_ insert the following code.
+- For Animal Color dropdown
+```html
+<td>
+	<select name="selectColor" id="selectColor">
+		@foreach($animalColors as $animalColor)
+			<option value="{{$animalColor->id}}">
+				{{$animalColor->name}}
+			</option>
+		@endforeach
+	</select>
+</td>
+```
+- For Animal No of Legs dropdown
+```html
+<td>
+	<select name="selectLegs" id="selectLegs">
+		@foreach($animalNoOfLegs as $animalNoOfLeg)
+			<option value="{{$animalNoOfLeg->id}}">
+				{{$animalNoOfLeg->name}}
+			</option>
+		@endforeach
+	</select>
+</td>
+```
+- Your completed _AnimalController.php_ should look like this,
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
+//new import
+use App\Models\Animal;
+use App\Models\Animal_color;
+use App\Models\Animal_type;
+use App\Models\No_legs;
+
+class AnimalController extends BaseController
+{
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function viewAnimal()
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+        $animalsData=Animal::all();
+
+        return view ('animalsView')-> with ('animals', $animalsData)->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+
+    public function insertAnimal()
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+
+        return view ('animalsInsert')-> with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+    
+}
+```
+- Your completed _animalsInsert.blade.php_ should look like this,
+```html
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Add Animal</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="antialiased">
+    <form name="new_animal_form" method="post" action="/saveanimal">
+		
+		{{ csrf_field() }}
+		
+            <table border="1" align="center">
+            <caption>Add New Animal</caption>
+            <tbody>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td><input type="text" id= "animalName" name="animalName" placeholder="Enter Animal Name"></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>:</td>
+                <td><select name="selectType" id="selectType">
+                    @foreach($animalTypes as $animalType)
+                    <option value="{{$animalType->id}}">
+                    {{$animalType->name}}
+                    </option>
+                    @endforeach
+                </select></td>
+            </tr>
+            <tr>
+                <td>Color</td>
+                <td>:</td>
+                <td><select name="selectColor" id="selectColor">
+                    @foreach($animalColors as $animalColor)
+                    <option value="{{$animalColor->id}}">
+                    {{$animalColor->name}}
+                    </option>
+                    @endforeach
+                </select></td>
+            </tr>
+            <tr>
+                <td># of Legs</td>
+                <td>:</td>
+                <td><select name="selectLegs" id="selectLegs">
+                    @foreach($animalNoOfLegs as $animalNoOfLeg)
+                    <option value="{{$animalNoOfLeg->id}}">
+                    {{$animalNoOfLeg->name}}
+                    </option>
+                    @endforeach
+                </select></td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="3">
+                    <input value="Reset" type="reset">&nbsp;
+                    <input value="Save" type="submit">
+                </th>
+            </tr>
+            </tbody>
+            </table>
+       </form>
+    </body>
+</html>
+```
+- Add the following code to _web.php_ so that we can navigate to the correct page when we type `/animalInsert` to the address bar,
+```php
+Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
+```
+- Navigate to `http://127.0.0.1:8000/animalInsert`
+- The page should look like this,
+
+![Pasted image 20221028120527](https://user-images.githubusercontent.com/111477436/198843838-49c2b32c-4aa1-46e6-8169-63768e3cebc7.png)
+## Save Button
+- In the _AnimalController.php_ add a new method `saveAnimal()` as follows,
+```php
+use Illuminate\Http\Request;
+
+public function saveAnimal(Request $request){
+	$newAnimal = new Animal();
+	$newAnimal->name = $request->animalName;
+	$newAnimal->type_id = $request->selectType;
+	$newAnimal->color_id = $request->selectColor;
+	$newAnimal->legs_id = $request->selectLegs;
+
+	$newAnimal->save();
+
+	return redirect("/animalpage");
+}
+```
+
+- ⚠ Add the following line to all Models to avoid _updated_at_ error when saving (or we need to have _updated_at_ and _inserted_at_ columns with _timestamp_ data type in the table that we are inserting data into), in this scenario we add it to _Animal_ model as the first line after class declaration,
+```php
+    public $timestamps = false;
+```
+- Add the following route to _web.php_
+```php
+Route::post('/saveanimal',[AnimalController::class,'saveAnimal']);
+```
+- If you did everything correctly up to now, a new record should be inserted into the table when you click the submit button after filling the animal details, and you'll be redirected to `http://127.0.0.1:8000/animalpage`.
+- The newly inserted record will be the last one in the list. e.g. _Save Test Animal_
+
+![Pasted image 20221028131059](https://user-images.githubusercontent.com/111477436/198843893-e38d3710-8526-43d6-a207-60fd9105beb7.png)
+
+# Update
+
+- This is a bit harder than what we did so far, so pay close attention to each step. 
+- Make a copy of _animalsInsert.blade.php_ as _animalsUpdate.blade.php_
+- Add a new hidden input next to `id=animalName` inside the `<td></td>` (which means inside the same table cell). We add this field so we can identify the id of the animal that needs to be updated. This field holds `animal` table's `id` column. We don't need to show this to the user, so we define it as a hidden field. 
+```html
+<input type="hidden" id= "animalID" name="animalID" value="">
+```
+- Take a copy of `viewAnimal()` method in _AnimalController_ and paste it at the end of the file (inside the class declaration).
+- Rename the copied function as `viewAnimalUpdate()`
+- Write the following code inside the method to retrieve data that's relevant to a particular animal. 
+> - Note the `Animal::where('table_column','operator','$variable')` method that's used to retrive the data, compared to `Animal::all()` method which returns all the records in the table, this method only retrieves data according to the parameters `('id','=',$animalID)` we pass to it. 
+> - When we return the `animalsUpdate` view (`animalsUpdate.blade.php`) we pass along data about few different things,
+> - `with ('animals', $animalsData[0])` - Data about the animal that the user selected, and is probably going to be updated. _Note that we only pass the first element of the list `$animalsData`_
+> - `with('animalTypes', $animalTypes)` - All the data from the _animal_type_ table. remember we got this data from `Animal_type::all()` method. This data is going to be used to fill the **selectType** dropdown, which shows all the animal types.
+> - `with('animalColors',$animalColors)` - Data that's going to be used to fill the **selectColor** dropdown.
+> - `with('animalNoOfLegs',$animalNoOfLegs)` - Data that's going to be used to fill the **selectLegs** dropdown.
+```php
+public function viewAnimalUpdate($animalID)
+{
+	$animalTypes=Animal_type::all();
+	$animalColors=Animal_color::all();
+	$animalNoOfLegs=No_legs::all();
+	
+	$animalsData = Animal::where('id','=',$animalID)->get();
+
+	return view ('animalsUpdate')-> with ('animals', $animalsData[0])->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+}
+```
+- Modify the `id=animalName`field in _animalsUpdate.blade.php_ as follows, we remove the `placeholder=` and add `value="{{$animals->name}}"`. This is to make the field display the name of the animal that the user selected to update.
+```html
+<input type="text" id= "animalName" name="animalName" value="{{$animals->name}}">
+```
+- Setting the dropdown/select values to match that of the record's. Modify the _Type_ Dropdown as follows,
+> - There are several things to unpack here, I'll go through one by one.
+> - In a update scenario a dropdown should achieve two things, first it should show the value that's in the database record as _pre selected_ when the form is displayed, and it should also show all the records that the dropdown normally holds. So that the user can update that field with another value.   
+> - To achieve that we add a `@if @else` condition to the dropdown code we used before. 
+> - The `@if` condition checks whether `$animals->type_id` (that is the _type_id_ of the animal that we passed from the previous _animalsView.blade.php_ page) matches the `$animalType->id` (_id_ of the _animal_type_ table, data from which we used to fill the dropdown list). If they match we make that value as **selected** by using `<option selected value="{{$animalType->id}}">` and then show the corresponding _name_ of the _animal_type_ as selected value in the dropdown. The _selected value=_ is a function that can be used to pre-select a value in a dropdown when a page is loaded (a default select). 
+> - In the `@else` condition we load all the other values to the dropdown, so the user can select another value if he/she chooses to do so.
+```html
+<td>
+	<select name="selectType" id="selectType">
+		@foreach($animalTypes as $animalType)
+			@if($animals->type_id==$animalType->id)
+				<option selected value="{{$animalType->id}}">
+					{{$animalType->name}}
+				</option>
+			@else
+				<option value="{{$animalType->id}}">
+					{{$animalType->name}}
+				</option>
+			@endif
+		@endforeach
+	</select>
+</td>
+```
+- Do the same for _Color_ and _Legs_ Dropdowns as well,
+```html
+<td>
+	<select name="selectColor" id="selectColor">
+		@foreach($animalColors as $animalColor)
+			@if($animals->color_id==$animalColor->id)
+				<option selected value="{{$animalColor->id}}">
+					{{$animalColor->name}}
+				</option>
+			@else
+				<option value="{{$animalColor->id}}">
+					{{$animalColor->name}}
+				</option>
+			@endif
+		@endforeach
+	</select>
+</td>
+```
+```html
+<td>
+	<select name="selectLegs" id="selectLegs">
+		@foreach($animalNoOfLegs as $animalNoOfLeg)
+			@if($animals->legs_id==$animalNoOfLeg->id)
+				<option selected value="{{$animalNoOfLeg->id}}">
+					{{$animalNoOfLeg->name}}
+				</option>
+			@else
+				<option value="{{$animalNoOfLeg->id}}">
+					{{$animalNoOfLeg->name}}
+				</option>
+			@endif
+		@endforeach
+	</select>
+</td>
+```
+- Add following route to _web.php_
+```php
+Route::get('/updateanimalpage/{animalID?}',[AnimalController::class, 'viewanimalupdate']);
+```
+- Add the following code to the _animalsView.blade.php_
+> Here the link `<a href="/updateanimalpage/{{$animal->id}}">Update</a>` is what takes us to the `animalsUpdate.blade.php` view. 
+```html
+@foreach($animals AS $animal)
+The {{ $animal->animalType->name }} 
+{{$animal->name}} which is 
+{{$animal->animalColor->name}} has 
+{{$animal->animalLegs->name}} legs.
+<a href="/updateanimalpage/{{$animal->id}}">Update</a>
+<br>
+@endforeach
+```
+- The final _animalsUpdate.blade.php_ should look like this
+```html
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Update Animal</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="antialiased">
+
+    <form name="new_animal_form" method="post" action="/saveanimal">
+        {{ csrf_field() }}
+            <table border="1" align="center">
+            <caption>Update {{$animals->name}} Record</caption>
+            <tbody>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td>
+                <input type="text" id= "animalName" name="animalName" value="{{$animals->name}}">
+                <input type="hidden" id= "animalID" name="animalID" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>:</td>
+                <td>
+                    <select name="selectType" id="selectType">
+                        @foreach($animalTypes as $animalType)
+                            @if($animals->type_id==$animalType->id)
+                                <option selected value="{{$animalType->id}}">
+                                    {{$animalType->name}}
+                                </option>
+                            @else
+                                <option value="{{$animalType->id}}">
+                                    {{$animalType->name}}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Color</td>
+                <td>:</td>
+                <td>
+                    <select name="selectColor" id="selectColor">
+                        @foreach($animalColors as $animalColor)
+                            @if($animals->color_id==$animalColor->id)
+                                <option selected value="{{$animalColor->id}}">
+                                    {{$animalColor->name}}
+                                </option>
+                            @else
+                                <option value="{{$animalColor->id}}">
+                                    {{$animalColor->name}}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td># of Legs</td>
+                <td>:</td>
+                <td>
+                    <select name="selectLegs" id="selectLegs">
+                        @foreach($animalNoOfLegs as $animalNoOfLeg)
+                            @if($animals->legs_id==$animalNoOfLeg->id)
+                                <option selected value="{{$animalNoOfLeg->id}}">
+                                    {{$animalNoOfLeg->name}}
+                                </option>
+                            @else
+                                <option value="{{$animalNoOfLeg->id}}">
+                                    {{$animalNoOfLeg->name}}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="3">
+                    <input value="Reset" type="reset">&nbsp;
+                    <input value="Save" type="submit">
+                </th>
+            </tr>
+            </tbody>
+            </table>
+       </form>
+    </body>
+</html>
+
+```
+- And final _AnimalControlller.php_ like this,
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
+
+//new import
+use App\Models\Animal;
+use App\Models\Animal_color;
+use App\Models\Animal_type;
+use App\Models\No_legs;
+
+class AnimalController extends BaseController
+{
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function viewAnimal()
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+        $animalsData=Animal::all();
+
+        return view ('animalsView')-> with ('animals', $animalsData)->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+
+    public function insertAnimal()
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+
+        return view ('animalsInsert')-> with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+    
+    public function saveAnimal(Request $request){
+        $newAnimal = new Animal();
+        $newAnimal->name = $request->animalName;
+        $newAnimal->type_id = $request->selectType;
+        $newAnimal->color_id = $request->selectColor;
+        $newAnimal->legs_id = $request->selectLegs;
+
+        $newAnimal->save();
+
+        return redirect("/animalpage");
+
+    }
+
+    public function viewAnimalUpdate($animalID)
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+        
+        $animalsData = Animal::where('id','=',$animalID)->get();
+
+        return view ('animalsUpdate')-> with ('animals', $animalsData[0])->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+
+}
+```
+- The _web.php_ like this,
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AnimalController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
+
+Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
+
+Route::post('/saveanimal',[AnimalController::class,'saveAnimal']);
+
+Route::get('/updateanimalpage/{animalID?}',[AnimalController::class, 'viewanimalupdate']);
+```
+- Now we can see the following in our _animalpage_
+
+![Pasted image 20221029221446](https://user-images.githubusercontent.com/111477436/198843951-77e89a22-2485-4229-bafa-e70754a2570c.png)
+- When we click the _Update_ hyperlink we are shown the _updateanimapage_ with corresponding values for the selected animal in the corresponding fields.
+
+![Pasted image 20221029221637](https://user-images.githubusercontent.com/111477436/198843963-55593be8-2e6d-49b8-b47d-1e09e85a8da5.png)
+
+⚠ Note that the update functionality is not yet complete and clicking the save button in the above page will result in adding a new record to the database since we didn't write the code for updating the record yet. We only did up to taking us to the update page when the we click the hyperlink and showing the correct values in the update form fields.
