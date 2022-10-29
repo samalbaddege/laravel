@@ -50,4 +50,15 @@ class AnimalController extends BaseController
 
     }
 
+    public function viewAnimalUpdate($animalID)
+    {
+        $animalTypes=Animal_type::all();
+        $animalColors=Animal_color::all();
+        $animalNoOfLegs=No_legs::all();
+        
+        $animalsData = Animal::where('id','=',$animalID)->get();
+
+        return view ('animalsUpdate')-> with ('animals', $animalsData[0])->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
+    }
+
 }

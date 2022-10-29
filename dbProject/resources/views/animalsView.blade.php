@@ -27,7 +27,9 @@
         The {{ $animal->animalType->name }} 
         {{$animal->name}} which is 
         {{$animal->animalColor->name}} has 
-        {{$animal->animalLegs->name}} legs. <br><br>
+        {{$animal->animalLegs->name}} legs.
+        <a href="/updateanimalpage/{{$animal->id}}">Update</a>
+        <br>
         @endforeach
 
 

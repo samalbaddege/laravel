@@ -23,3 +23,5 @@ Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
 Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
 
 Route::post('/saveanimal',[AnimalController::class,'saveAnimal']);
+
+Route::get('/updateanimalpage/{animalID?}',[AnimalController::class, 'viewanimalupdate']);
