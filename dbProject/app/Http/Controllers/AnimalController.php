@@ -61,4 +61,22 @@ class AnimalController extends BaseController
         return view ('animalsUpdate')-> with ('animals', $animalsData[0])->with('animalTypes', $animalTypes)->with('animalColors',$animalColors)->with('animalNoOfLegs',$animalNoOfLegs);
     }
 
+    public function updateAnimal(Request $request){
+        $Animal = Animal::find($request->animalID);
+        $Animal->name = $request->animalName;
+        $Animal->type_id = $request->selectType;
+        $Animal->color_id = $request->selectColor;
+        $Animal->legs_id = $request->selectLegs;
+
+        $Animal->update();
+
+        return redirect("/animalpage");
+    }
+
+    public function deleteAnimal($animalID){
+        $Animal = Animal::find($animalID);
+        $Animal->delete();
+        return redirect("/animalpage");
+    }
+
 }

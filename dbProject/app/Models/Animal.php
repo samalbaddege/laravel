@@ -17,6 +17,7 @@ class Animal extends Authenticatable
     
     use HasApiTokens, HasFactory, Notifiable;
     protected $table='animal';
+    # protected $primarykey = 'columnName'; To set the primary key if the columns is other than id
     
     public function animalColor(){
         return $this->hasOne(Animal_color::class,'id','color_id');

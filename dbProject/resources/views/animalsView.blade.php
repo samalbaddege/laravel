@@ -29,6 +29,7 @@
         {{$animal->animalColor->name}} has 
         {{$animal->animalLegs->name}} legs.
         <a href="/updateanimalpage/{{$animal->id}}">Update</a>
+        <a href="/deleteanimal/{{$animal->id}}">Delete</a>
         <br>
         @endforeach
 

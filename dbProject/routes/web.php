@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnimalController;
+use App\Models\Animal;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,7 @@ Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
 Route::post('/saveanimal',[AnimalController::class,'saveAnimal']);
 
 Route::get('/updateanimalpage/{animalID?}',[AnimalController::class, 'viewanimalupdate']);
+
+Route::post('/updateanimal', [AnimalController::class,'updateanimal']);
+
+Route::get('/deleteanimal/{animalID?}', [AnimalController::class,'deleteanimal']);

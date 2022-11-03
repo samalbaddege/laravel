@@ -17,7 +17,7 @@
     </head>
     <body class="antialiased">
 
-    <form name="new_animal_form" method="post" action="/saveanimal">
+    <form name="update_animal_form" method="post" action="/updateanimal">
         {{ csrf_field() }}
             <table border="1" align="center">
             <caption>Update {{$animals->name}} Record</caption>
@@ -27,7 +27,7 @@
                 <td>:</td>
                 <td>
                 <input type="text" id= "animalName" name="animalName" value="{{$animals->name}}">
-                <input type="hidden" id= "animalID" name="animalID" value="">
+                <input type="hidden" id= "animalID" name="animalID" value="{{$animals->id}}">
                 </td>
             </tr>
             <tr>
