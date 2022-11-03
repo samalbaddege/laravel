@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnimalController;
 use App\Models\Animal;
+use App\Http\Controllers\AnimalColorController;
+use App\Models\Animal_color;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +32,15 @@ Route::get('/updateanimalpage/{animalID?}',[AnimalController::class, 'viewanimal
 Route::post('/updateanimal', [AnimalController::class,'updateanimal']);
 
 Route::get('/deleteanimal/{animalID?}', [AnimalController::class,'deleteanimal']);
+
+
+//Color Routes
+Route::get('/colorIndex', [AnimalColorController::class, 'viewColorIndex']);
+
+Route::post('/savecolor',[AnimalColorController::class,'saveAnimalcolor']);
+
+Route::get('/updateanimalcolorpage/{animalColorID?}',[AnimalColorController::class, 'viewAnimalColorUpdate']);
+
+Route::post('/updateanimalcolor', [AnimalColorController::class,'updateanimalcolor']);
+
+Route::get('/deleteanimalcolor/{animalColorID?}', [AnimalColorController::class,'deleteanimalcolor']);

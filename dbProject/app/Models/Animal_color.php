@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Animal_color extends Authenticatable
 {
+    public $timestamps = false;
+
     use HasApiTokens, HasFactory, Notifiable;
     protected $table='animal_color';
     
