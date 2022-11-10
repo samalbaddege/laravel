@@ -21,7 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
+// Route::get('/animalpage', [AnimalController::class, 'viewAnimal']);
 
 Route::get('/animalInsert', [AnimalController::class, 'insertAnimal']);
 
@@ -44,3 +44,17 @@ Route::get('/updateanimalcolorpage/{animalColorID?}',[AnimalColorController::cla
 Route::post('/updateanimalcolor', [AnimalColorController::class,'updateanimalcolor']);
 
 Route::get('/deleteanimalcolor/{animalColorID?}', [AnimalColorController::class,'deleteanimalcolor']);
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    /** All the Routes you add here require log in */
+    Route::get('/animalpage', [AnimalController::class, 'viewAnimal'])->name('animals');
+
+});
